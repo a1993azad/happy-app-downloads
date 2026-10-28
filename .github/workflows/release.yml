@@ -1,0 +1,23 @@
+name: Publish Happy app release
+
+on:
+  push:
+    tags:
+      - "apk-*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Publish APK release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: gh release create "$TAG_NAME" happy-app.apk --title "Happy App APK" --generate-notes --latest
